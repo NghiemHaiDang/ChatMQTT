@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "j2NPz+ZsnK4=",
+  "success": true,
+  "projectFilePath": "C:\\HaiDang_Code\\ChatMQTT\\ChatMQTT.Server\\ChatMQTT.Server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nghie\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.22.1\\microsoft.visualstudio.azure.containers.tools.targets.1.22.1.nupkg.sha512",
+    "C:\\Users\\nghie\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512"
+  ],
+  "logs": []
+}

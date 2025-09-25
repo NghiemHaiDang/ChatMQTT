@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ChatMQTT.Client": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
