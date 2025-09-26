@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30 d17.14
+VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatMQTT.Server", "ChatMQTT.Server\ChatMQTT.Server.csproj", "{77C954F7-E019-4257-9B4E-DEECEF28FEBA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatMQTT.Client", "ChatMQTT.Client\ChatMQTT.Client.csproj", "{7EB4A611-7B20-4041-92C8-69BBD27CABCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks", "BuildingBlocks\BuildingBlocks.csproj", "{61091395-FACD-44AF-8219-EA9513E3865B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{7EB4A611-7B20-4041-92C8-69BBD27CABCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EB4A611-7B20-4041-92C8-69BBD27CABCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EB4A611-7B20-4041-92C8-69BBD27CABCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61091395-FACD-44AF-8219-EA9513E3865B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61091395-FACD-44AF-8219-EA9513E3865B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61091395-FACD-44AF-8219-EA9513E3865B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61091395-FACD-44AF-8219-EA9513E3865B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{77C954F7-E019-4257-9B4E-DEECEF28FEBA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{7EB4A611-7B20-4041-92C8-69BBD27CABCA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{61091395-FACD-44AF-8219-EA9513E3865B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {501B5E3A-7F81-4A44-BCD4-1596AC21CAA6}

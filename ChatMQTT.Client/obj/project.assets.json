@@ -21,6 +21,16 @@
             "related": ".xml"
           }
         }
+      },
+      "BuildingBlocks/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/BuildingBlocks.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BuildingBlocks.dll": {}
+        }
       }
     }
   },
@@ -139,32 +149,38 @@
         "mqttnet.nuspec",
         "nuget.png"
       ]
+    },
+    "BuildingBlocks/1.0.0": {
+      "type": "project",
+      "path": "../BuildingBlocks/BuildingBlocks.csproj",
+      "msbuildProject": "../BuildingBlocks/BuildingBlocks.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "BuildingBlocks >= 1.0.0",
       "MQTTnet >= 4.3.7.1207",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.22.1"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\nghie\\.nuget\\packages\\": {},
+    "C:\\Users\\63200271\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\HaiDang_Code\\ChatMQTT\\ChatMQTT.Client\\ChatMQTT.Client.csproj",
+      "projectUniqueName": "C:\\DangNH30\\LGCNS\\ChatMQTT\\ChatMQTT.Client\\ChatMQTT.Client.csproj",
       "projectName": "ChatMQTT.Client",
-      "projectPath": "C:\\HaiDang_Code\\ChatMQTT\\ChatMQTT.Client\\ChatMQTT.Client.csproj",
-      "packagesPath": "C:\\Users\\nghie\\.nuget\\packages\\",
-      "outputPath": "C:\\HaiDang_Code\\ChatMQTT\\ChatMQTT.Client\\obj\\",
+      "projectPath": "C:\\DangNH30\\LGCNS\\ChatMQTT\\ChatMQTT.Client\\ChatMQTT.Client.csproj",
+      "packagesPath": "C:\\Users\\63200271\\.nuget\\packages\\",
+      "outputPath": "C:\\DangNH30\\LGCNS\\ChatMQTT\\ChatMQTT.Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\nghie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\63200271\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -178,7 +194,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\DangNH30\\LGCNS\\ChatMQTT\\BuildingBlocks\\BuildingBlocks.csproj": {
+              "projectPath": "C:\\DangNH30\\LGCNS\\ChatMQTT\\BuildingBlocks\\BuildingBlocks.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -222,7 +242,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

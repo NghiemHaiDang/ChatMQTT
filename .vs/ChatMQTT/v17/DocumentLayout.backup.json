@@ -1,10 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\HaiDang_Code\\ChatMQTT\\",
+  "WorkspaceRootPath": "C:\\DangNH30\\LGCNS\\ChatMQTT\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{77C954F7-E019-4257-9B4E-DEECEF28FEBA}|ChatMQTT.Server\\ChatMQTT.Server.csproj|c:\\haidang_code\\chatmqtt\\chatmqtt.server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77C954F7-E019-4257-9B4E-DEECEF28FEBA}|ChatMQTT.Server\\ChatMQTT.Server.csproj|solutionrelative:chatmqtt.server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7EB4A611-7B20-4041-92C8-69BBD27CABCA}|ChatMQTT.Client\\ChatMQTT.Client.csproj|c:\\dangnh30\\lgcns\\chatmqtt\\chatmqtt.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7EB4A611-7B20-4041-92C8-69BBD27CABCA}|ChatMQTT.Client\\ChatMQTT.Client.csproj|solutionrelative:chatmqtt.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61091395-FACD-44AF-8219-EA9513E3865B}|BuildingBlocks\\BuildingBlocks.csproj|c:\\dangnh30\\lgcns\\chatmqtt\\buildingblocks\\models\\clients\\userinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61091395-FACD-44AF-8219-EA9513E3865B}|BuildingBlocks\\BuildingBlocks.csproj|solutionrelative:buildingblocks\\models\\clients\\userinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -13,20 +17,33 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "DockedWidth": 172,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserInfo.cs",
+              "DocumentMoniker": "C:\\DangNH30\\LGCNS\\ChatMQTT\\BuildingBlocks\\Models\\Clients\\UserInfo.cs",
+              "RelativeDocumentMoniker": "BuildingBlocks\\Models\\Clients\\UserInfo.cs",
+              "ToolTip": "C:\\DangNH30\\LGCNS\\ChatMQTT\\BuildingBlocks\\Models\\Clients\\UserInfo.cs",
+              "RelativeToolTip": "BuildingBlocks\\Models\\Clients\\UserInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-26T03:49:08.982Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\HaiDang_Code\\ChatMQTT\\ChatMQTT.Server\\Program.cs",
-              "RelativeDocumentMoniker": "ChatMQTT.Server\\Program.cs",
-              "ToolTip": "C:\\HaiDang_Code\\ChatMQTT\\ChatMQTT.Server\\Program.cs",
-              "RelativeToolTip": "ChatMQTT.Server\\Program.cs",
-              "ViewState": "AgIAAPgAAAAAAAAAAAAswBYAAAAtAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\DangNH30\\LGCNS\\ChatMQTT\\ChatMQTT.Client\\Program.cs",
+              "RelativeDocumentMoniker": "ChatMQTT.Client\\Program.cs",
+              "ToolTip": "C:\\DangNH30\\LGCNS\\ChatMQTT\\ChatMQTT.Client\\Program.cs",
+              "RelativeToolTip": "ChatMQTT.Client\\Program.cs",
+              "ViewState": "AgIAAGoAAAAAAAAAAAAhwGkAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-25T13:47:52.517Z",
+              "WhenOpened": "2025-09-25T14:19:07.032Z",
               "EditorCaption": ""
             }
           ]

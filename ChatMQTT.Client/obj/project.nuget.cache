@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "7wfHdsxEWT0=",
+  "dgSpecHash": "95S9VonUxhc=",
   "success": true,
-  "projectFilePath": "C:\\HaiDang_Code\\ChatMQTT\\ChatMQTT.Client\\ChatMQTT.Client.csproj",
+  "projectFilePath": "C:\\DangNH30\\LGCNS\\ChatMQTT\\ChatMQTT.Client\\ChatMQTT.Client.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\nghie\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.22.1\\microsoft.visualstudio.azure.containers.tools.targets.1.22.1.nupkg.sha512",
-    "C:\\Users\\nghie\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512"
+    "C:\\Users\\63200271\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.22.1\\microsoft.visualstudio.azure.containers.tools.targets.1.22.1.nupkg.sha512",
+    "C:\\Users\\63200271\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,61 +1,42 @@
 ﻿// ==============================================================
-// 💻 MQTT CLIENT - KẾT NỐI VÀ CHAT QUA MQTT BROKER
-// ==============================================================
+//MQTT CLIENT - KẾT NỐI VÀ CHAT QUA MQTT BROKER
+// =============================================================
 // Đây là ứng dụng MQTT Client để chat real-time qua MQTT protocol
 // Client này có thể:
 // - Kết nối đến MQTT Broker
 // - Subscribe (đăng ký nhận tin) từ các topic
 // - Publish (gửi tin nhắn) đến các topic
-// - Hiển thị lịch sử tin nhắn
+// - Hiển thị lịch sử tin nhắn 
 // - Quản lý kết nối một cách user-friendly
 
-using MQTTnet;               // Thư viện chính của MQTT - cung cấp các class cơ bản
-using MQTTnet.Client;        // Các class đặc biệt cho MQTT Client
-using System.Text;           // Để chuyển đổi giữa string và byte array
-using System.Text.Json;      // Để serialize/deserialize JSON cho tin nhắn
+using BuildingBlocks.Models.Clients;
+using MQTTnet;               
+using MQTTnet.Client;       
+using System.Text;           
+using System.Text.Json;     
 
 namespace ChatMQTT.Client
 {
     class Program
     {
-        // ==============================================================
-        // 📊 CÁC BIẾN TOÀN CỤC - LƯU TRẠNG THÁI CLIENT
-        // ==============================================================
+        #region Global variables
 
-        /// <summary>
-        /// Instance của MQTT Client - đối tượng chính để giao tiếp với broker
-        /// IMqttClient là interface, cho phép mock testing và loose coupling
-        /// </summary>
         private static IMqttClient? mqttClient;
 
-        /// <summary>
-        /// ID duy nhất của client này - được tạo tự động hoặc user nhập
-        /// </summary>
         private static string? clientId;
 
-        /// <summary>
-        /// Topic hiện tại mà client đang subscribe (nhận tin nhắn)
-        /// Null = chưa subscribe topic nào
-        /// </summary>
         private static string? currentTopic;
 
-        /// <summary>
-        /// Danh sách lưu lịch sử tất cả tin nhắn đã gửi và nhận
-        /// List<T> không thread-safe nhưng ở đây chỉ có 1 thread chính nên OK
-        /// </summary>
         private static readonly List<ChatMessage> messageHistory = new();
 
-        // ==============================================================
-        // 🚀 HÀM MAIN - ĐIỂM KHỞI ĐẦU CỦA CHƯƠNG TRÌNH
-        // ==============================================================
+        #endregion Global variables
+
+        #region Main Function
+
         static async Task Main(string[] args)
         {
-            // Hiển thị banner chào mừng
+            // Banner
             ShowBanner();
-
-            // ==============================================================
-            // 📋 THU THẬP THÔNG TIN TỪ USER
-            // ==============================================================
 
             // Lấy thông tin MQTT broker (host, port) từ user
             var serverInfo = GetServerInfo();
@@ -63,24 +44,16 @@ namespace ChatMQTT.Client
             // Lấy thông tin user (username, tạo clientId)
             var userInfo = GetUserInfo();
 
-            // ==============================================================
-            // 🔌 TẠO VÀ KẾT NỐI MQTT CLIENT
-            // ==============================================================
-
             // Tạo kết nối đến broker với thông tin vừa thu thập
             await CreateAndConnectClient(serverInfo, userInfo);
 
-            // ==============================================================
-            // 🎯 HIỂN THỊ MENU CHÍNH VÀ XỬ LÝ
-            // ==============================================================
-
-            // Vào vòng lặp menu chính để user tương tác
             await ShowMainMenu();
         }
 
-        // ==============================================================
-        // 🔌 TẠO VÀ KẾT NỐI CLIENT
-        // ==============================================================
+        #endregion Main Function
+
+        #region Feature Function
+
         /// <summary>
         /// Tạo MQTT client và kết nối đến broker
         /// </summary>
@@ -90,19 +63,10 @@ namespace ChatMQTT.Client
         {
             try
             {
-                // ==============================================================
-                // 🏗️ TẠO MQTT CLIENT
-                // ==============================================================
-
-                // MqttFactory dùng factory pattern để tạo các đối tượng MQTT
                 var mqttFactory = new MqttFactory();
 
                 // Tạo MQTT Client instance
                 mqttClient = mqttFactory.CreateMqttClient();
-
-                // ==============================================================
-                // 📡 ĐĂNG KÝ CÁC EVENT HANDLERS
-                // ==============================================================
 
                 // Event được trigger khi kết nối thành công
                 mqttClient.ConnectedAsync += OnConnected;
@@ -110,77 +74,51 @@ namespace ChatMQTT.Client
                 // Event được trigger khi mất kết nối
                 mqttClient.DisconnectedAsync += OnDisconnected;
 
-                // ⭐ Event QUAN TRỌNG NHẤT: khi nhận được tin nhắn
-                // Đây là trái tim của client - xử lý tin nhắn nhận được
+                // Xử lý tin nhắn nhận được
                 mqttClient.ApplicationMessageReceivedAsync += OnMessageReceived;
 
-                // ==============================================================
-                // ⚙️ CẤU HÌNH KẾT NỐI
-                // ==============================================================
-
-                // Tạo cấu hình kết nối với các thông số cần thiết
+                // Tạo cấu hình kết nối
                 var mqttClientOptions = mqttFactory.CreateClientOptionsBuilder()
                     .WithTcpServer(serverInfo.Host, serverInfo.Port)  // Địa chỉ broker
                     .WithClientId(userInfo.ClientId)                  // ID duy nhất của client
                     .WithCleanSession()                               // Clean session = không lưu state cũ
                     .Build();
 
-                // ==============================================================
-                // 🔗 THỰC HIỆN KẾT NỐI
-                // ==============================================================
-
                 Console.WriteLine($"\n🔄 Connecting to MQTT broker at {serverInfo.Host}:{serverInfo.Port}...");
 
                 // Kết nối đến broker (async operation)
                 await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-
-                // Lưu clientId để sử dụng sau này
                 clientId = userInfo.ClientId;
 
                 Console.WriteLine($"✅ Connected successfully as '{clientId}'!");
             }
             catch (Exception ex)
             {
-                // Nếu kết nối thất bại thì thoát chương trình
                 Console.WriteLine($"❌ Connection failed: {ex.Message}");
-                Environment.Exit(1);  // Exit code 1 = error
+                Environment.Exit(1);
             }
         }
 
-        // ==============================================================
-        // 🎯 MENU CHÍNH - GIAO DIỆN NGƯỜI DÙNG
-        // ==============================================================
         /// <summary>
-        /// Hiển thị menu chính và xử lý lựa chọn của user
+        /// Hiển thị menu chính
         /// Chạy trong vòng lặp cho đến khi user chọn thoát
         /// </summary>
         private static async Task ShowMainMenu()
         {
-            // Vòng lặp menu chính - chỉ dừng khi disconnect hoặc thoát
             while (mqttClient?.IsConnected == true)
             {
-                // ==============================================================
-                // 🖥️ HIỂN THỊ MENU OPTIONS
-                // ==============================================================
-
                 Console.WriteLine("\n" + new string('=', 60));
                 Console.WriteLine("📋 MAIN MENU:");
                 Console.WriteLine("1. 📺 Subscribe to topic");      // Đăng ký nhận tin từ topic
-                Console.WriteLine("2. 📨 Send message");           // Gửi tin nhắn đến topic
-                Console.WriteLine("3. 📜 View message history");   // Xem lịch sử tin nhắn
-                Console.WriteLine("4. 🔄 Change topic");           // Đổi topic khác
-                Console.WriteLine("5. 📊 Show connection info");   // Hiển thị thông tin kết nối
+                Console.WriteLine("2. 📨 Send message");            // Gửi tin nhắn đến topic
+                Console.WriteLine("3. 📜 View message history");    // Xem lịch sử tin nhắn
+                Console.WriteLine("4. 🔄 Change topic");            // Đổi topic khác
+                Console.WriteLine("5. 📊 Show connection info");    // Hiển thị thông tin kết nối
                 Console.WriteLine("6. ❌ Disconnect and exit");     // Thoát chương trình
                 Console.WriteLine(new string('=', 60));
 
-                // ==============================================================
-                // ⌨️ NHẬN VÀ XỬ LÝ LỰA CHỌN
-                // ==============================================================
-
                 Console.Write("Choose option (1-6): ");
                 var choice = Console.ReadLine();
-
-                // Switch statement xử lý từng option
                 switch (choice)
                 {
                     case "1":
@@ -208,20 +146,15 @@ namespace ChatMQTT.Client
             }
         }
 
-        // ==============================================================
-        // 📺 SUBSCRIBE TO TOPIC - ĐĂNG KÝ NHẬN TIN
-        // ==============================================================
         /// <summary>
         /// Cho phép user subscribe (đăng ký nhận tin) từ một topic
         /// Topic trong MQTT như "kênh" hoặc "room" trong chat
         /// </summary>
         private static async Task SubscribeToTopic()
         {
-            // Nhận topic name từ user
             Console.Write("\n📺 Enter topic to subscribe (e.g., 'chat/general'): ");
             var topic = Console.ReadLine()?.Trim();
 
-            // Validation: topic không được empty
             if (string.IsNullOrEmpty(topic))
             {
                 Console.WriteLine("❌ Topic cannot be empty!");
@@ -230,18 +163,9 @@ namespace ChatMQTT.Client
 
             try
             {
-                // ==============================================================
-                // 🏗️ TẠO TOPIC FILTER
-                // ==============================================================
-
-                // MqttTopicFilterBuilder dùng builder pattern để tạo topic filter
                 var topicFilter = new MqttTopicFilterBuilder()
                     .WithTopic(topic)  // Tên topic muốn subscribe
-                    .Build();          // Build thành MqttTopicFilter object
-
-                // ==============================================================
-                // 📡 GỬI SUBSCRIBE REQUEST
-                // ==============================================================
+                    .Build();
 
                 // Gửi subscribe request đến broker
                 await mqttClient!.SubscribeAsync(topicFilter, CancellationToken.None);
@@ -258,9 +182,6 @@ namespace ChatMQTT.Client
             }
         }
 
-        // ==============================================================
-        // 📨 SEND MESSAGE - GỬI TIN NHẮN
-        // ==============================================================
         /// <summary>
         /// Gửi tin nhắn đến topic hiện tại
         /// Tin nhắn được format thành JSON chứa metadata
@@ -287,10 +208,6 @@ namespace ChatMQTT.Client
 
             try
             {
-                // ==============================================================
-                // 📦 TẠO CHAT MESSAGE OBJECT
-                // ==============================================================
-
                 // Tạo object chứa metadata của tin nhắn
                 var chatMessage = new ChatMessage
                 {
@@ -300,16 +217,8 @@ namespace ChatMQTT.Client
                     Topic = currentTopic        // Topic đích
                 };
 
-                // ==============================================================
-                // 🔄 SERIALIZE TO JSON
-                // ==============================================================
-
                 // Chuyển object thành JSON string để gửi qua mạng
                 var messageJson = JsonSerializer.Serialize(chatMessage);
-
-                // ==============================================================
-                // 🏗️ TẠO MQTT APPLICATION MESSAGE
-                // ==============================================================
 
                 // MqttApplicationMessageBuilder dùng builder pattern
                 var message = new MqttApplicationMessageBuilder()
@@ -317,18 +226,10 @@ namespace ChatMQTT.Client
                     .WithPayload(messageJson)   // Nội dung (JSON string)
                     .Build();                   // Build thành MqttApplicationMessage
 
-                // ==============================================================
-                // 📡 PUBLISH MESSAGE
-                // ==============================================================
-
                 // Gửi tin nhắn đến broker (broker sẽ chuyển tiếp đến subscribers)
                 await mqttClient!.PublishAsync(message, CancellationToken.None);
 
                 Console.WriteLine($"✅ Message sent to '{currentTopic}'");
-
-                // ==============================================================
-                // 💾 LƯU VÀO LỊCH SỬ
-                // ==============================================================
 
                 // Thêm tin nhắn vừa gửi vào lịch sử để user có thể xem lại
                 messageHistory.Add(chatMessage);
@@ -339,9 +240,6 @@ namespace ChatMQTT.Client
             }
         }
 
-        // ==============================================================
-        // 📜 SHOW MESSAGE HISTORY - HIỂN THỊ LỊCH SỬ
-        // ==============================================================
         /// <summary>
         /// Hiển thị lịch sử tin nhắn (gửi và nhận)
         /// Chỉ hiển thị 20 tin nhắn gần nhất để tránh spam console
@@ -361,10 +259,6 @@ namespace ChatMQTT.Client
             // Lấy 20 tin nhắn cuối cùng (mới nhất)
             var last20Messages = messageHistory.TakeLast(20);
 
-            // ==============================================================
-            // 🖨️ HIỂN THỊ TỪNG TIN NHẮN
-            // ==============================================================
-
             foreach (var msg in last20Messages)
             {
                 // Format thời gian
@@ -381,9 +275,6 @@ namespace ChatMQTT.Client
             }
         }
 
-        // ==============================================================
-        // 🔄 CHANGE TOPIC - CHUYỂN ĐỔI TOPIC
-        // ==============================================================
         /// <summary>
         /// Cho phép user chuyển đổi sang topic khác
         /// Có thể unsubscribe topic cũ trước khi subscribe topic mới
@@ -418,9 +309,6 @@ namespace ChatMQTT.Client
             await SubscribeToTopic();
         }
 
-        // ==============================================================
-        // 📊 SHOW CONNECTION INFO - HIỂN THỊ THÔNG TIN KẾT NỐI
-        // ==============================================================
         /// <summary>
         /// Hiển thị thông tin tổng quan về kết nối và trạng thái hiện tại
         /// </summary>
@@ -433,11 +321,8 @@ namespace ChatMQTT.Client
             Console.WriteLine($"   Messages in History: {messageHistory.Count}");        // Số tin nhắn trong lịch sử
         }
 
-        // ==============================================================
-        // ❌ DISCONNECT AND EXIT - THOÁT CHƯƠNG TRÌNH
-        // ==============================================================
         /// <summary>
-        /// Disconnect khỏi broker và thoát chương trình một cách graceful
+        /// Disconnect khỏi broker và thoát chương trình
         /// </summary>
         private static async Task DisconnectAndExit()
         {
@@ -461,10 +346,6 @@ namespace ChatMQTT.Client
             Environment.Exit(0);  // Exit code 0 = success
         }
 
-        // ==============================================================
-        // 📡 EVENT HANDLERS - XỬ LÝ CÁC SỰ KIỆN
-        // ==============================================================
-
         /// <summary>
         /// Event handler được gọi khi kết nối thành công đến broker
         /// </summary>
@@ -485,29 +366,17 @@ namespace ChatMQTT.Client
             return Task.CompletedTask;
         }
 
-        // ==============================================================
-        // ⭐ EVENT HANDLER QUAN TRỌNG NHẤT - NHẬN TIN NHẮN
-        // ==============================================================
         /// <summary>
         /// Event handler được gọi mỗi khi nhận được tin nhắn từ topic đã subscribe
-        /// Đây là trái tim của client - xử lý tin nhắn real-time
         /// </summary>
         /// <param name="e">Event arguments chứa tin nhắn nhận được</param>
         private static Task OnMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
             try
             {
-                // ==============================================================
-                // 📨 TRÍCH XUẤT THÔNG TIN TIN NHẮN
-                // ==============================================================
-
                 // Chuyển payload từ byte array thành string
                 var payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
                 var topic = e.ApplicationMessage.Topic;
-
-                // ==============================================================
-                // 🔄 THỬ PARSE JSON MESSAGE
-                // ==============================================================
 
                 // Thử parse JSON, nếu không được thì hiển thị raw text
                 try
@@ -518,10 +387,6 @@ namespace ChatMQTT.Client
                     // Kiểm tra tin nhắn hợp lệ và không phải từ chính mình
                     if (chatMessage != null && chatMessage.From != clientId)
                     {
-                        // ==============================================================
-                        // 💬 HIỂN THỊ TIN NHẮN CHAT
-                        // ==============================================================
-
                         var timeStr = chatMessage.Timestamp.ToString("HH:mm:ss");
                         Console.WriteLine($"\n💬 [{timeStr}] {chatMessage.From} @{topic}: {chatMessage.Message}");
 
@@ -532,10 +397,6 @@ namespace ChatMQTT.Client
                 }
                 catch
                 {
-                    // ==============================================================
-                    // 📨 HIỂN THỊ RAW MESSAGE (KHÔNG PHẢI JSON)
-                    // ==============================================================
-
                     // Nếu không parse được JSON thì hiển thị raw text
                     var timeStr = DateTime.Now.ToString("HH:mm:ss");
                     Console.WriteLine($"\n📨 [{timeStr}] @{topic}: {payload}");
@@ -550,12 +411,6 @@ namespace ChatMQTT.Client
                     };
                     messageHistory.Add(rawMessage);
                 }
-
-                // ==============================================================
-                // 🖥️ RE-SHOW MENU PROMPT
-                // ==============================================================
-
-                // Hiển thị lại prompt để user biết có thể nhập lệnh tiếp
                 Console.Write("Choose option (1-6): ");
             }
             catch (Exception ex)
@@ -566,12 +421,8 @@ namespace ChatMQTT.Client
             return Task.CompletedTask;
         }
 
-        // ==============================================================
-        // 🎨 HELPER METHODS - CÁC HÀM HỖ TRỢ
-        // ==============================================================
-
         /// <summary>
-        /// Hiển thị banner chào mừng khi khởi động client
+        /// Hiển thị banner
         /// </summary>
         private static void ShowBanner()
         {
@@ -580,18 +431,14 @@ namespace ChatMQTT.Client
 
             Console.WriteLine(@"
 ╔══════════════════════════════════════════════════════════════╗
-║                💻 MQTT CLIENT APPLICATION                    ║
-║                     Chat qua MQTT Protocol                   ║
-║                                                              ║
 ║  🎯 Tính năng:                                               ║
 ║     ✅ Connect to MQTT Broker                                ║
 ║     ✅ Subscribe/Unsubscribe Topics                          ║
 ║     ✅ Send & Receive Messages                               ║
-║     ✅ Message History                                        ║
-║     ✅ Real-time Chat                                         ║
-║     ✅ JSON Message Format                                    ║
+║     ✅ Message History                                       ║
+║     ✅ Real-time Chat                                        ║
+║     ✅ JSON Message Format                                   ║
 ╚══════════════════════════════════════════════════════════════╝");
-
             Console.ResetColor();  // Reset màu chữ về mặc định
             Console.WriteLine();
         }
@@ -604,17 +451,9 @@ namespace ChatMQTT.Client
         {
             Console.WriteLine("🌐 MQTT BROKER CONNECTION:");
 
-            // ==============================================================
-            // 🏠 LẤY HOST ADDRESS
-            // ==============================================================
-
             Console.Write("Enter MQTT broker host (default: localhost): ");
             var host = Console.ReadLine()?.Trim();
             if (string.IsNullOrEmpty(host)) host = "localhost";  // Default value
-
-            // ==============================================================
-            // 🔢 LẤY PORT NUMBER
-            // ==============================================================
 
             Console.Write("Enter MQTT broker port (default: 1883): ");
             var portInput = Console.ReadLine()?.Trim();
@@ -651,62 +490,13 @@ namespace ChatMQTT.Client
                 Console.WriteLine($"Using default username: {username}");
             }
 
-            // ==============================================================
-            // 🆔 TẠO UNIQUE CLIENT ID
-            // ==============================================================
-
             // Client ID phải unique trong toàn broker
             // Format: ChatClient_Username_TimeStamp để đảm bảo unique
             var clientId = $"ChatClient_{username}_{DateTime.Now:HHmmss}";
 
             return new UserInfo { Username = username, ClientId = clientId };
         }
-    }
 
-    // ==============================================================
-    // 📋 DATA CLASSES - CÁC CLASS CHỨA DỮ LIỆU
-    // ==============================================================
-
-    /// <summary>
-    /// Class chứa thông tin về MQTT broker server
-    /// </summary>
-    public class ServerInfo
-    {
-        /// <summary>Host address của broker (IP hoặc domain name)</summary>
-        public string Host { get; set; } = string.Empty;
-
-        /// <summary>Port number mà broker đang lắng nghe</summary>
-        public int Port { get; set; }
-    }
-
-    /// <summary>
-    /// Class chứa thông tin về user
-    /// </summary>
-    public class UserInfo
-    {
-        /// <summary>Tên người dùng (để hiển thị)</summary>
-        public string Username { get; set; } = string.Empty;
-
-        /// <summary>Client ID duy nhất (để broker phân biệt các client)</summary>
-        public string ClientId { get; set; } = string.Empty;
-    }
-
-    /// <summary>
-    /// Class đại diện cho một tin nhắn chat
-    /// Được serialize thành JSON khi gửi qua MQTT
-    /// </summary>
-    public class ChatMessage
-    {
-        /// <summary>Người gửi tin nhắn (Client ID hoặc username)</summary>
-        public string From { get; set; } = string.Empty;
-
-        /// <summary>Nội dung tin nhắn</summary>
-        public string Message { get; set; } = string.Empty;
-
-        /// <summary>Thời gian gửi tin nhắn</summary>
-        public DateTime Timestamp { get; set; }
-
-        /// <summary>Topic mà tin nhắn được gửi đến</summary>
-        public string Topic { get; set; } = string.Empty;
+        #endregion Feature Function
     }
 }

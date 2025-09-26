@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChatMQTT.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd4f448531d966e77d6a17f78c68b36082d6b65d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e8e4393ef32c773c143023f4aadcc6ad67bf5649")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChatMQTT.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChatMQTT.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
